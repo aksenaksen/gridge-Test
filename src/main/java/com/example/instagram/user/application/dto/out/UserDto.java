@@ -1,4 +1,4 @@
-package com.example.instagram.user.application.dto;
+package com.example.instagram.user.application.dto.out;
 
 import com.example.instagram.user.domain.User;
 import com.example.instagram.user.domain.UserStatus;

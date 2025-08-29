@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -25,9 +26,9 @@ public class UserFinder {
                 .orElseThrow(UserNotFoundException::new);
     }
 
-    public User findByRegisterDateTime(LocalDateTime start, LocalDateTime end){
-        return userRepository.findByCreatedAtBetween(start, end)
-                .orElseThrow(UserNotFoundException::new);
+
+    public List<User> findByRegisterDateTime(LocalDateTime start, LocalDateTime end){
+        return userRepository.findByCreatedAtBetween(start, end);
     }
 
     public User findById(Long userId) {

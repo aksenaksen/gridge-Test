@@ -1,6 +1,7 @@
 package com.example.instagram.user.application;
 
-import com.example.instagram.user.application.dto.UserDto;
+import com.example.instagram.user.application.dto.in.UserRegisterCommand;
+import com.example.instagram.user.application.dto.out.UserDto;
 import com.example.instagram.user.domain.User;
 import com.example.instagram.user.domain.UserStatus;
 import org.junit.jupiter.api.DisplayName;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,12 +18,16 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
     @Mock
     private UserFinder userFinder;
+    
+    @Mock
+    private UserCommander userCommander;
 
     @InjectMocks
     private UserService userService;
@@ -98,6 +102,16 @@ class UserServiceTest {
         assertThat(result.get(0).name()).isEqualTo("Test Name 1");
         assertThat(result.get(1).username()).isEqualTo("testuser2");
         assertThat(result.get(1).name()).isEqualTo("Test Name 2");
+    }
+
+    @Test
+    @DisplayName("사용자 등록")
+    void register_Success() {
+        UserRegisterCommand command = new UserRegisterCommand("newuser", "New User", "password123");
+
+        userService.register(command);
+
+        verify(userCommander).register(command);
     }
 
     @Test

@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
@@ -47,11 +48,11 @@ public class User extends BaseEntity {
         this.status = status;
     }
 
-    public static User createUser(String username, String name, String password){
+    public static User createUser(String username, String name, String password , PasswordEncoder passwordEncoder){
         User user = new User();
         user.username = username;
         user.name = name;
-        user.password = password;
+        user.password = passwordEncoder.encode(password);
         return user;
     }
 
@@ -68,17 +69,17 @@ public class User extends BaseEntity {
     }
 
     public void activate(){
-        Assert.state( this.isActive(), UserMessage.CANNOT_ACTIVATE.getMessage());
+        Assert.state(!this.isActive(), UserMessage.CANNOT_ACTIVATE.getMessage());
         this.status = UserStatus.ACTIVE;
     }
 
     public void inActivate(){
-        Assert.state(this.isInactive() , UserMessage.CANNOT_DEACTIVATE.getMessage());
+        Assert.state(!this.isInactive() , UserMessage.CANNOT_DEACTIVATE.getMessage());
         this.status = UserStatus.INACTIVE;
     }
 
     public void suspend(){
-        Assert.state(this.isSuspended() , UserMessage.CANNOT_DEACTIVATE.getMessage());
+        Assert.state(!this.isSuspended() , UserMessage.CANNOT_DEACTIVATE.getMessage());
         this.status = UserStatus.SUSPENDED;
     }
 
