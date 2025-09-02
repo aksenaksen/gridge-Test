@@ -62,7 +62,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping()
+    @PatchMapping()
     public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal CustomUserDetails userDetails){
         userService.delete(new UserDeleteCommand(userDetails.getUser().getUserId()));
         return ResponseEntity.noContent().build();
