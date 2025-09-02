@@ -2,7 +2,9 @@ package com.example.instagram.user.application;
 
 import com.example.instagram.user.application.dto.in.UserRegisterCommand;
 import com.example.instagram.user.application.dto.out.UserDto;
+import com.example.instagram.user.domain.AgreementType;
 import com.example.instagram.user.domain.User;
+import com.example.instagram.user.domain.UserProfile;
 import com.example.instagram.user.domain.UserStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,10 +38,15 @@ class UserServiceTest {
     @DisplayName("유저네임으로 사용자 정보 조회")
     void findByUsername_Success() {
         String username = "testuser";
+        UserProfile profile = UserProfile.builder()
+                .name("Test Name")
+                .phoneNumber("01012345678")
+                .birthDay(LocalDate.of(1990, 1, 1))
+                .build();
         User user = User.builder()
                 .username(username)
-                .name("Test Name")
                 .password("password")
+                .profile(profile)
                 .status(UserStatus.ACTIVE)
                 .build();
         given(userFinder.findByUsername(username)).willReturn(user);
@@ -55,10 +62,15 @@ class UserServiceTest {
     @DisplayName("이름으로 사용자 정보 조회")
     void findByName_Success() {
         String name = "Test Name";
+        UserProfile profile = UserProfile.builder()
+                .name(name)
+                .phoneNumber("01012345678")
+                .birthDay(LocalDate.of(1990, 1, 1))
+                .build();
         User user = User.builder()
                 .username("testuser")
-                .name(name)
                 .password("password")
+                .profile(profile)
                 .status(UserStatus.ACTIVE)
                 .build();
         given(userFinder.findByName(name)).willReturn(user);
@@ -77,17 +89,27 @@ class UserServiceTest {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = start.plusDays(1).minusSeconds(1);
         
+        UserProfile profile1 = UserProfile.builder()
+                .name("Test Name 1")
+                .phoneNumber("01012345678")
+                .birthDay(LocalDate.of(1990, 1, 1))
+                .build();
         User user1 = User.builder()
                 .username("testuser1")
-                .name("Test Name 1")
                 .password("password")
+                .profile(profile1)
                 .status(UserStatus.ACTIVE)
                 .build();
 
+        UserProfile profile2 = UserProfile.builder()
+                .name("Test Name 2")
+                .phoneNumber("01087654321")
+                .birthDay(LocalDate.of(1985, 5, 15))
+                .build();
         User user2 = User.builder()
                 .username("testuser2")
-                .name("Test Name 2")
                 .password("password")
+                .profile(profile2)
                 .status(UserStatus.ACTIVE)
                 .build();
 
@@ -107,7 +129,14 @@ class UserServiceTest {
     @Test
     @DisplayName("사용자 등록")
     void register_Success() {
-        UserRegisterCommand command = new UserRegisterCommand("newuser", "New User", "password123");
+        UserRegisterCommand command = new UserRegisterCommand(
+                "newuser",
+                "New User", 
+                "01012345678",
+                "password123",
+                LocalDate.of(1990, 1, 1),
+                Arrays.asList(AgreementType.TERMS_OF_SERVICE, AgreementType.DATA_POLICY, AgreementType.LOCATION_BASED_SERVICE)
+        );
 
         userService.register(command);
 
@@ -118,10 +147,15 @@ class UserServiceTest {
     @DisplayName("ID로 사용자 정보 조회")
     void findById_Success() {
         Long userId = 1L;
+        UserProfile profile = UserProfile.builder()
+                .name("Test Name")
+                .phoneNumber("01012345678")
+                .birthDay(LocalDate.of(1990, 1, 1))
+                .build();
         User user = User.builder()
                 .username("testuser")
-                .name("Test Name")
                 .password("password")
+                .profile(profile)
                 .status(UserStatus.ACTIVE)
                 .build();
         given(userFinder.findById(userId)).willReturn(user);

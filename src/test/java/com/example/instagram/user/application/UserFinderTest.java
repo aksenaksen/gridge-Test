@@ -1,6 +1,7 @@
 package com.example.instagram.user.application;
 
 import com.example.instagram.user.domain.User;
+import com.example.instagram.user.domain.UserProfile;
 import com.example.instagram.user.domain.UserStatus;
 import com.example.instagram.user.exception.UserNotFoundException;
 import com.example.instagram.user.infrastructor.UserRepository;
@@ -36,10 +37,15 @@ class UserFinderTest {
     @DisplayName("유저네임으로 사용자 찾기")
     void findByUsername_Success() {
         String username = "testuser";
+        UserProfile profile = UserProfile.builder()
+                .name("Test Name")
+                .phoneNumber("01012345678")
+                .birthDay(LocalDate.of(1990, 1, 1))
+                .build();
         User user = User.builder()
                 .username(username)
-                .name("Test Name")
                 .password("password")
+                .profile(profile)
                 .status(UserStatus.ACTIVE)
                 .build();
         given(userRepository.findByUsername(username)).willReturn(Optional.of(user));
@@ -47,6 +53,7 @@ class UserFinderTest {
         User foundUser = userFinder.findByUsername(username);
 
         assertThat(foundUser.getUsername()).isEqualTo(username);
+        assertThat(foundUser.getProfile().getName()).isEqualTo("Test Name");
     }
 
     @Test
@@ -63,24 +70,29 @@ class UserFinderTest {
     @DisplayName("이름으로 사용자 찾기")
     void findByName_Success() {
         String name = "Test Name";
+        UserProfile profile = UserProfile.builder()
+                .name(name)
+                .phoneNumber("01012345678")
+                .birthDay(LocalDate.of(1990, 1, 1))
+                .build();
         User user = User.builder()
                 .username("testuser")
-                .name(name)
                 .password("password")
+                .profile(profile)
                 .status(UserStatus.ACTIVE)
                 .build();
-        given(userRepository.findByName(name)).willReturn(Optional.of(user));
+        given(userRepository.findByProfile_NameOrderByCreatedAt(name)).willReturn(Optional.of(user));
 
         User foundUser = userFinder.findByName(name);
 
-        assertThat(foundUser.getName()).isEqualTo(name);
+        assertThat(foundUser.getProfile().getName()).isEqualTo(name);
     }
 
     @Test
     @DisplayName("존재하지 않는 이름으로 조회시 예외 발생")
     void findByName_NotFound() {
         String name = "Nonexistent Name";
-        given(userRepository.findByName(name)).willReturn(Optional.empty());
+        given(userRepository.findByProfile_NameOrderByCreatedAt(name)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> userFinder.findByName(name))
                 .isInstanceOf(UserNotFoundException.class);
@@ -92,17 +104,27 @@ class UserFinderTest {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusDays(2);
 
+        UserProfile profile1 = UserProfile.builder()
+                .name("Test Name")
+                .phoneNumber("01012345678")
+                .birthDay(LocalDate.of(1990, 1, 1))
+                .build();
         User user = User.builder()
                 .username("testuser")
-                .name("Test Name")
                 .password("password")
+                .profile(profile1)
                 .status(UserStatus.ACTIVE)
                 .build();
 
+        UserProfile profile2 = UserProfile.builder()
+                .name("Test Name2")
+                .phoneNumber("01087654321")
+                .birthDay(LocalDate.of(1985, 5, 15))
+                .build();
         User user2 = User.builder()
-                .username("testuser")
-                .name("Test Name")
+                .username("testuser2")
                 .password("password")
+                .profile(profile2)
                 .status(UserStatus.ACTIVE)
                 .build();
 
@@ -111,7 +133,7 @@ class UserFinderTest {
 
         List<User> users = Arrays.asList(user, user2);
 
-        given(userRepository.findByCreatedAtBetween(start, end)).willReturn(users);
+        given(userRepository.findByCreatedAtBetweenOrderByCreatedAt(start, end)).willReturn(users);
 
         List<User> foundUser = userFinder.findByRegisterDateTime(start, end);
         assertThat(foundUser.size()).isEqualTo(2);
@@ -123,10 +145,15 @@ class UserFinderTest {
     @DisplayName("ID로 사용자 찾기")
     void findById_Success() {
         Long userId = 1L;
+        UserProfile profile = UserProfile.builder()
+                .name("Test Name")
+                .phoneNumber("01012345678")
+                .birthDay(LocalDate.of(1990, 1, 1))
+                .build();
         User user = User.builder()
                 .username("testuser")
-                .name("Test Name")
                 .password("password")
+                .profile(profile)
                 .status(UserStatus.ACTIVE)
                 .build();
         given(userRepository.findById(userId)).willReturn(Optional.of(user));

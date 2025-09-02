@@ -1,10 +1,11 @@
 package com.example.instagram.user.exception;
 
-import com.example.instagram.user.constant.UserMessage;
+import com.example.instagram.common.exception.GlobalException;
+import com.example.instagram.user.constant.UserErrorConstant;
 
-public class UserNotFoundException extends RuntimeException {
+public class UserNotFoundException extends GlobalException {
 
     public UserNotFoundException() {
-        super(UserMessage.USER_NOTFOUND.getMessage());
+        super(UserErrorConstant.USER_NOTFOUND);
     }
 }

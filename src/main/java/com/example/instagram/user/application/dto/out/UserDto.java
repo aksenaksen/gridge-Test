@@ -18,7 +18,7 @@ public record UserDto(
         return new UserDto(
                 user.getUserId(),
                 user.getUsername(),
-                user.getName(),
+                user.getProfile().getName(),
                 user.getStatus(),
                 user.getLastLoginAt(),
                 user.getCreatedAt(),

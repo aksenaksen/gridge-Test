@@ -1,8 +1,12 @@
 package com.example.instagram.user.application;
 
+import com.example.instagram.user.application.dto.in.UserDeleteCommand;
 import com.example.instagram.user.application.dto.in.UserRegisterCommand;
+import com.example.instagram.user.application.dto.in.UserSuspendCommand;
+import com.example.instagram.user.application.dto.in.UserUpdatePasswordCommand;
 import com.example.instagram.user.application.dto.out.UserDto;
 import com.example.instagram.user.domain.User;
+import com.example.instagram.user.presentation.in.RequestFindAllUserCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements IUserService {
 
     private final UserFinder userFinder;
     private final UserCommander userCommander;
@@ -22,6 +26,19 @@ public class UserService {
     public UserDto findByUsername(String username){
         User user = userFinder.findByUsername(username);
         return UserDto.from(user);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDto> findAll(RequestFindAllUserCondition condition){
+
+        return userFinder.findByCondition(condition).stream()
+                .map(UserDto::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public void existsByUsername(String username){
+        userFinder.existsByUserName(username);
     }
 
     @Transactional(readOnly = true)
@@ -50,6 +67,23 @@ public class UserService {
     @Transactional
     public void register(UserRegisterCommand command){
         userCommander.register(command);
+    }
+
+    @Transactional
+    public void changePassword(UserUpdatePasswordCommand command){
+        userCommander.updatePassword(command);
+    }
+
+    @Override
+    @Transactional
+    public void suspend(UserSuspendCommand command) {
+        userCommander.delete(command);
+    }
+
+    @Override
+    @Transactional
+    public void delete(UserDeleteCommand command) {
+        userCommander.delete(command);
     }
 
 }
