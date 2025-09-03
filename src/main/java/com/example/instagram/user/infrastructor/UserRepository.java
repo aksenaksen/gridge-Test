@@ -11,6 +11,7 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
     Optional<User> findByUsername(String username);
     Optional<User> findByProfile_NameOrderByCreatedAt(String name);
 
+
     Optional<User> findByProfile_PhoneNumber(String phoneNumber);
 
     List<User> findByCreatedAtBetweenOrderByCreatedAt(LocalDateTime start, LocalDateTime end);

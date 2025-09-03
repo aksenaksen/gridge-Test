@@ -40,8 +40,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
-        String token = authHeader.substring(AuthMessageConstant.BEARER_TOKEN_PREFIX.length());
+        String token = authHeader.substring(AuthMessageConstant.BEARER_TOKEN_PREFIX.length()).trim();
 
         if (valid(response, token) || isNotAccessToken(response, token)) return;
 

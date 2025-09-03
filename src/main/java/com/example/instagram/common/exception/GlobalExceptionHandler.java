@@ -3,6 +3,7 @@ package com.example.instagram.common.exception;
 import com.example.instagram.user.domain.AgreementType;
 import com.example.instagram.user.exception.NotAgreedRequireAgreement;
 import com.example.instagram.user.exception.UserAlreadyExistException;
+import com.example.instagram.user.exception.UserNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Collectors;
 
@@ -49,6 +49,13 @@ public class GlobalExceptionHandler {
 
         log.warn("Location : {} NotAgreedRequireAgreement : [{}]", location, exception.getMessage());
         return build(exception.getHttpStatus(), message);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ProblemDetail handleUserNotFoundException(UserNotFoundException exception) {
+        String location = stringify(exception.getStackTrace()[0]);
+        log.warn("Location : {} UserAlreadyExistException : [{}]",location, exception.getMessage());
+        return build(exception.getHttpStatus(), exception.getMessage());
     }
 
     @ExceptionHandler(UserAlreadyExistException.class)

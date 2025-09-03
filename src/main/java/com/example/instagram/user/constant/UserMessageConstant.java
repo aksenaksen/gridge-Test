@@ -3,7 +3,7 @@ package com.example.instagram.user.constant;
 public class UserMessageConstant {
 
     public static final String PHONE_NUMBER_PATTERN = "^010-\\d{4}-\\d{4}";
-    public static final String USERNAME_PATTERN = "^[a-z._]{1,20}$";
+    public static final String USERNAME_PATTERN = "^[a-zA-Z0-9._]{1,20}$";
 
     public static final String USERNAME_REQUIRED = "아이디를 입력해주세요";
     public static final String USERNAME_SIZE_INVALID = "아이디는 1자 이상 20자 이하여야 합니다";
