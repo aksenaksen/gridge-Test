@@ -24,7 +24,23 @@ public class AgreementCheckInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String requestURI = request.getRequestURI();
+        
+        // Swagger 관련 경로는 인터셉터에서 제외
+        if (requestURI.startsWith("/swagger-ui") || 
+            requestURI.startsWith("/v3/api-docs") || 
+            requestURI.equals("/swagger-ui.html")) {
+            return true;
+        }
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        // 익명 사용자인 경우 통과
+        if (principal instanceof String && "anonymousUser".equals(principal)) {
+            return true;
+        }
+        
+        CustomUserDetails userDetails = (CustomUserDetails) principal;
 
         if(userDetails == null) {
             throw new AccessDeniedException("deined");
