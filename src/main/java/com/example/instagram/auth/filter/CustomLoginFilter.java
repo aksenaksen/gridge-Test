@@ -13,15 +13,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -29,8 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.example.instagram.auth.constant.AuthMessageConstant.AUTHENTICATION_FAILED_MESSAGE;
-import static com.example.instagram.auth.constant.AuthMessageConstant.BEARER_TOKEN_PREFIX;
+import static com.example.instagram.auth.constant.AuthMessageConstant.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -66,7 +68,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
     @Transactional
     protected void successfulAuthentication(
             HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult
-    ) throws IOException {
+    ){
 
         CustomUserDetails userDetails = (CustomUserDetails) authResult.getPrincipal();
 
@@ -97,11 +99,11 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> body = new HashMap<>();
-        body.put("error", HttpStatus.UNAUTHORIZED.name());
-        body.put("message", AUTHENTICATION_FAILED_MESSAGE);
 
-        response.getWriter().write(mapper.writeValueAsString(body));
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, NOT_FOUND_USERNAME);
+        problemDetail.setTitle(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+
+        response.getWriter().write(mapper.writeValueAsString(problemDetail));
     }
     private Cookie createCookie(String name, String refreshToken) {
         Cookie cookie = new Cookie(name, refreshToken);

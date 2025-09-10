@@ -11,13 +11,13 @@ public class WebConfig implements WebMvcConfigurer {
 
 
     private final List<String> excludePath =  List.of(
-            "/v1/members",
             "/h2-console/**",
-            "/v1/users",
+            "/api/users",
             "/v1/auth/refresh",
             "/login/oauth2/**",
             "/oauth2/**",
-            "/error"
+            "/error",
+            "/swagger-ui/**"
     );
     private final AgreementCheckInterceptor agreementCheckInterceptor;
 

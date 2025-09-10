@@ -4,6 +4,7 @@ package com.example.instagram.auth.filter;
 import com.example.instagram.auth.constant.AuthMessageConstant;
 import com.example.instagram.auth.domain.CustomUserDetails;
 import com.example.instagram.auth.domain.TokenType;
+import com.example.instagram.auth.exception.JwtValidationException;
 import com.example.instagram.common.util.JwtUtil;
 import com.example.instagram.user.domain.User;
 import com.example.instagram.common.security.UserRole;
@@ -42,7 +43,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         String token = authHeader.substring(AuthMessageConstant.BEARER_TOKEN_PREFIX.length()).trim();
 
-        if (valid(response, token) || isNotAccessToken(response, token)) return;
+        try {
+            if (valid(response, token) || isNotAccessToken(response, token)) return;
+        }
+        catch (JwtValidationException e){
+            request.setAttribute("Exception", e);
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String username = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
