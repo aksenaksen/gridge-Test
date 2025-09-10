@@ -1,6 +1,6 @@
 package com.example.instagram.user.presentation.out;
 
-import com.example.instagram.user.application.dto.out.UserDto;
+import com.example.instagram.user.application.dto.out.ResponseUserDto;
 import com.example.instagram.user.domain.UserStatus;
 
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ public record ResponseUser(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public static ResponseUser from(UserDto user) {
+    public static ResponseUser from(ResponseUserDto user) {
         return new ResponseUser(
                 user.userId(),
                 user.username(),
