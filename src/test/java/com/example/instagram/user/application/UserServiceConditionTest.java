@@ -1,6 +1,6 @@
 package com.example.instagram.user.application;
 
-import com.example.instagram.user.application.dto.out.UserDto;
+import com.example.instagram.user.application.dto.out.ResponseUserDto;
 import com.example.instagram.user.domain.User;
 import com.example.instagram.user.domain.UserProfile;
 import com.example.instagram.user.domain.UserStatus;
@@ -50,7 +50,7 @@ class UserServiceConditionTest {
                 
         given(userFinder.findByCondition(condition)).willReturn(Arrays.asList(user));
 
-        List<UserDto> result = userService.findAll(condition);
+        List<ResponseUserDto> result = userService.findAll(condition);
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).username()).isEqualTo("user1");
@@ -89,7 +89,7 @@ class UserServiceConditionTest {
                 
         given(userFinder.findByCondition(condition)).willReturn(Arrays.asList(user1, user2));
 
-        List<UserDto> result = userService.findAll(condition);
+        List<ResponseUserDto> result = userService.findAll(condition);
 
         assertThat(result).hasSize(2);
         assertThat(result.get(0).username()).isEqualTo("user1");
@@ -103,7 +103,7 @@ class UserServiceConditionTest {
         
         given(userFinder.findByCondition(condition)).willReturn(Arrays.asList());
 
-        List<UserDto> result = userService.findAll(condition);
+        List<ResponseUserDto> result = userService.findAll(condition);
 
         assertThat(result).isEmpty();
     }

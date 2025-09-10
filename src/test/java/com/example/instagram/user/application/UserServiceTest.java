@@ -1,7 +1,7 @@
 package com.example.instagram.user.application;
 
 import com.example.instagram.user.application.dto.in.UserRegisterCommand;
-import com.example.instagram.user.application.dto.out.UserDto;
+import com.example.instagram.user.application.dto.out.ResponseUserDto;
 import com.example.instagram.user.domain.AgreementType;
 import com.example.instagram.user.domain.User;
 import com.example.instagram.user.domain.UserProfile;
@@ -51,7 +51,7 @@ class UserServiceTest {
                 .build();
         given(userFinder.findByUsername(username)).willReturn(user);
 
-        UserDto result = userService.findByUsername(username);
+        ResponseUserDto result = userService.findByUsername(username);
 
         assertThat(result.username()).isEqualTo(username);
         assertThat(result.name()).isEqualTo("Test Name");
@@ -75,7 +75,7 @@ class UserServiceTest {
                 .build();
         given(userFinder.findByName(name)).willReturn(user);
 
-        UserDto result = userService.findByName(name);
+        ResponseUserDto result = userService.findByName(name);
 
         assertThat(result.name()).isEqualTo(name);
         assertThat(result.username()).isEqualTo("testuser");
@@ -117,7 +117,7 @@ class UserServiceTest {
 
         given(userFinder.findByRegisterDateTime(start, end)).willReturn(users);
 
-        List<UserDto> result = userService.findByRegisterDate(date);
+        List<ResponseUserDto> result = userService.findByRegisterDate(date);
 
         assertThat(result).hasSize(2);
         assertThat(result.get(0).username()).isEqualTo("testuser1");
@@ -160,7 +160,7 @@ class UserServiceTest {
                 .build();
         given(userFinder.findById(userId)).willReturn(user);
 
-        UserDto result = userService.findById(userId);
+        ResponseUserDto result = userService.findById(userId);
 
         assertThat(result.username()).isEqualTo("testuser");
         assertThat(result.name()).isEqualTo("Test Name");

@@ -21,8 +21,10 @@ spring:
   batch:
     jdbc:
       initialize-schema: always
+
     job:
-      enabled: false
+      enabled: true
+
       
   security:
     oauth2:
