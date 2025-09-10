@@ -5,7 +5,7 @@ import com.example.instagram.user.domain.UserStatus;
 
 import java.time.LocalDateTime;
 
-public record UserDto(
+public record ResponseUserDto(
         Long userId,
         String username,
         String name,
@@ -14,8 +14,8 @@ public record UserDto(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public static UserDto from(User user) {
-        return new UserDto(
+    public static ResponseUserDto from(User user) {
+        return new ResponseUserDto(
                 user.getUserId(),
                 user.getUsername(),
                 user.getProfile().getName(),

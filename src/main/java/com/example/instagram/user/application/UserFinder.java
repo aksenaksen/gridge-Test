@@ -27,10 +27,6 @@ public class UserFinder {
                 .orElseThrow(UserNotFoundException::new);
     }
 
-    public List<User> findAll(){
-        return userRepository.findAllByOrderByCreatedAtDesc();
-    }
-
     public List<User> findByRegisterDateTime(LocalDateTime start, LocalDateTime end){
         return userRepository.findByCreatedAtBetweenOrderByCreatedAt(start, end);
     }
@@ -46,13 +42,7 @@ public class UserFinder {
         }
     }
     
-    public List<User> findAllOrderByCreatedAtDesc() {
-        return userRepository.findAllByOrderByCreatedAtDesc();
-    }
-    
     public List<User> findByCondition(RequestFindAllUserCondition condition) {
-        // 여기서 조건에 따른 쿼리를 구성
-        // 일단 간단한 구현으로 하고, 복잡한 조건 검색은 UserRepository에서 처리
         return userRepository.findByCondition(condition);
     }
 

@@ -4,7 +4,7 @@ import com.example.instagram.user.application.dto.in.UserDeleteCommand;
 import com.example.instagram.user.application.dto.in.UserRegisterCommand;
 import com.example.instagram.user.application.dto.in.UserSuspendCommand;
 import com.example.instagram.user.application.dto.in.UserUpdatePasswordCommand;
-import com.example.instagram.user.application.dto.out.UserDto;
+import com.example.instagram.user.application.dto.out.ResponseUserDto;
 import com.example.instagram.user.domain.User;
 import com.example.instagram.user.presentation.in.RequestFindAllUserCondition;
 import lombok.RequiredArgsConstructor;
@@ -23,16 +23,16 @@ public class UserService implements IUserService {
     private final UserCommander userCommander;
 
     @Transactional(readOnly = true)
-    public UserDto findByUsername(String username){
+    public ResponseUserDto findByUsername(String username){
         User user = userFinder.findByUsername(username);
-        return UserDto.from(user);
+        return ResponseUserDto.from(user);
     }
 
     @Transactional(readOnly = true)
-    public List<UserDto> findAll(RequestFindAllUserCondition condition){
+    public List<ResponseUserDto> findAll(RequestFindAllUserCondition condition){
 
         return userFinder.findByCondition(condition).stream()
-                .map(UserDto::from)
+                .map(ResponseUserDto::from)
                 .toList();
     }
 
@@ -42,26 +42,26 @@ public class UserService implements IUserService {
     }
 
     @Transactional(readOnly = true)
-    public UserDto findByName(String name){
+    public ResponseUserDto findByName(String name){
         User user = userFinder.findByName(name);
-        return UserDto.from(user);
+        return ResponseUserDto.from(user);
     }
 
     @Transactional(readOnly = true)
-    public List<UserDto> findByRegisterDate(LocalDate date){
+    public List<ResponseUserDto> findByRegisterDate(LocalDate date){
         LocalDateTime start =  date.atStartOfDay();
         LocalDateTime end = start.plusDays(1).minusSeconds(1);
 
         List<User> user = userFinder.findByRegisterDateTime(start, end);
         return user.stream()
-                .map(UserDto::from)
+                .map(ResponseUserDto::from)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public UserDto findById(Long userId){
+    public ResponseUserDto findById(Long userId){
         User user = userFinder.findById(userId);
-        return UserDto.from(user);
+        return ResponseUserDto.from(user);
     }
 
     @Transactional

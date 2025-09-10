@@ -55,7 +55,6 @@ public class UserCommander {
                     .orElseThrow(UserNotFoundException::new);
         }
         user.changePassword(command.password(), passwordEncoder);
-        userRepository.save(user);
     }
 
     public void delete(UserSuspendCommand command){
