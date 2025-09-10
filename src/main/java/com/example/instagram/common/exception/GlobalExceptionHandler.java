@@ -2,8 +2,6 @@ package com.example.instagram.common.exception;
 
 import com.example.instagram.user.domain.AgreementType;
 import com.example.instagram.user.exception.NotAgreedRequireAgreement;
-import com.example.instagram.user.exception.UserAlreadyExistException;
-import com.example.instagram.user.exception.UserNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +11,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.stream.Collectors;
 
@@ -51,20 +51,32 @@ public class GlobalExceptionHandler {
         return build(exception.getHttpStatus(), message);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ProblemDetail handleUserNotFoundException(UserNotFoundException exception) {
+    @ExceptionHandler(GlobalException.class)
+    public ProblemDetail handleUserNotFoundException(GlobalException exception) {
         String location = stringify(exception.getStackTrace()[0]);
         log.warn("Location : {} UserAlreadyExistException : [{}]",location, exception.getMessage());
         return build(exception.getHttpStatus(), exception.getMessage());
     }
 
-    @ExceptionHandler(UserAlreadyExistException.class)
-    public ProblemDetail handleUserAlreadyExistException(UserAlreadyExistException exception) {
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ProblemDetail handleNotFoundException(NoResourceFoundException exception) {
         String location = stringify(exception.getStackTrace()[0]);
-        log.warn("Location : {} UserAlreadyExistException : [{}]",location, exception.getMessage());
-        return build(exception.getHttpStatus(), exception.getMessage());
+        log.warn("Location : {} UserAlreadyExistException : [{}] , {}",location, exception.getMessage(), exception);
+        return build(ServerErrorConstant.NOT_FOUND.getHttpStatus(), ServerErrorConstant.NOT_FOUND.getMessage());
     }
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ProblemDetail handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+        String location = stringify(exception.getStackTrace()[0]);
+        log.warn("Location : {} UserAlreadyExistException : [{}]",location, exception.getMessage());
+        return build(ServerErrorConstant.BAD_REQUEST.getHttpStatus(), ServerErrorConstant.BAD_REQUEST.getMessage());
+    }
+//    @ExceptionHandler(Exception.class)
+//    public ProblemDetail handleException(Exception exception) {
+//        String location = stringify(exception.getStackTrace()[0]);
+//        log.warn("Location : {} Exception : [{}]",location, exception.getMessage());
+//        return build(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
+//    }
 
     private String stringify(MethodArgumentNotValidException exception) {
         StringBuilder errorMessageBuilder = new StringBuilder();
