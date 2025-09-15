@@ -125,7 +125,7 @@ docker-compose -f docker-compose-local.yml up -d
 ## 🔧 환경 설정
 
 ### 로컬 개발 환경
-- **Database**: H2 메모리 데이터베이스
+- **Database**: H2 메모리 데이터베이스 -> 배포에서는 mysql
 - **Cache**: Redis (Docker)
 - **File Storage**: AWS S3
 
