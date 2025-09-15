@@ -1,6 +1,7 @@
 # Instagram Clone API
 
 Spring Boot로 구현한 Instagram 클론 프로젝트입니다.
+<img width="712" height="663" alt="스크린샷 2025-09-13 오후 2 11 31" src="https://github.com/user-attachments/assets/2d9863bd-63a8-453a-aa8c-848967c5b19c" />
 
 ## 🚀 주요 기능
 
