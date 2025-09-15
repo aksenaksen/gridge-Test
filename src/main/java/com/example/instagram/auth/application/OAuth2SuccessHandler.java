@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
-    private final IRefreshTokenService refreshTokenPort;
+    private final IRefreshTokenRepository refreshTokenPort;
     private final UserRepository userRepository;
 
     @Override

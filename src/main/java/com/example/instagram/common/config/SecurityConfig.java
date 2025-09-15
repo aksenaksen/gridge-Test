@@ -2,7 +2,7 @@ package com.example.instagram.common.config;
 
 
 import com.example.instagram.auth.application.CustomUserDetailsService;
-import com.example.instagram.auth.application.IRefreshTokenService;
+import com.example.instagram.auth.application.IRefreshTokenRepository;
 import com.example.instagram.auth.application.OAuth2SuccessHandler;
 import com.example.instagram.auth.application.OAuth2UserService;
 import com.example.instagram.auth.filter.JwtRequestFilter;
@@ -37,7 +37,7 @@ public class SecurityConfig {
     private final OAuth2UserService customOAuth2UserService;
     private final CustomUserDetailsService customUserDetailsService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
-    private final IRefreshTokenService refreshTokenService;
+    private final IRefreshTokenRepository refreshTokenService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final UserRepository userRepository;
 
@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/v1/auth/refresh").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/login/oauth2/**", "/oauth2/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()

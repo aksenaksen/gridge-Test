@@ -1,5 +1,6 @@
 package com.example.instagram.common.exception;
 
+import com.example.instagram.auth.exception.JwtValidationException;
 import com.example.instagram.user.domain.AgreementType;
 import com.example.instagram.user.exception.NotAgreedRequireAgreement;
 import jakarta.validation.ConstraintViolation;
@@ -7,6 +8,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,60 +25,65 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-
-        String location = stringify(exception.getStackTrace()[0]);
         String message = stringify(exception);
-        log.warn("Location : {} MethodArgumentNotValidException : [{}]",location, message);
+        log.warn("",exception);
         return build(HttpStatus.BAD_REQUEST, message);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ProblemDetail handleConstraintViolationException(ConstraintViolationException exception) {
-        String location = stringify(exception.getStackTrace()[0]);
         String message = stringify(exception);
-        log.warn("Location : {} ConstraintViolationException : [{}]",location, message);
+        log.warn("",exception);
         return build(HttpStatus.BAD_REQUEST, message);
     }
 
     @ExceptionHandler(NotAgreedRequireAgreement.class)
     public ProblemDetail handleNotAgreedRequireAgreement(NotAgreedRequireAgreement exception) {
-        String location = stringify(exception.getStackTrace()[0]);
         String notAgreed = exception.getNotAgreedTypes().stream()
                 .map(AgreementType::getDescription)
                 .collect(Collectors.joining(", "));
 
         String message = exception.getMessage()+ " : " + notAgreed;
 
-        log.warn("Location : {} NotAgreedRequireAgreement : [{}]", location, exception.getMessage());
+        log.warn("NotAgreedRequireAgreement : [{}] {}",  exception.getMessage(),exception);
         return build(exception.getHttpStatus(), message);
     }
 
+    @ExceptionHandler(JwtValidationException.class)
+    public ProblemDetail handleJwtValidationException(JwtValidationException exception) {
+        log.debug("JWT validation failed: {}", exception.getMessage());
+        return build(HttpStatus.UNAUTHORIZED, exception.getMessage());
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ProblemDetail handleAuthenticationException(AuthenticationException exception) {
+        log.debug("Authentication failed: {}", exception.getMessage());
+        return build(HttpStatus.UNAUTHORIZED, "인증이 필요합니다");
+    }
+
+
     @ExceptionHandler(GlobalException.class)
-    public ProblemDetail handleUserNotFoundException(GlobalException exception) {
-        String location = stringify(exception.getStackTrace()[0]);
-        log.warn("Location : {} UserAlreadyExistException : [{}]",location, exception.getMessage());
+    public ProblemDetail handleGlobalException(GlobalException exception) {
+        log.warn("",exception);
         return build(exception.getHttpStatus(), exception.getMessage());
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ProblemDetail handleNotFoundException(NoResourceFoundException exception) {
-        String location = stringify(exception.getStackTrace()[0]);
-        log.warn("Location : {} UserAlreadyExistException : [{}] , {}",location, exception.getMessage(), exception);
+        log.warn("",exception);
         return build(ServerErrorConstant.NOT_FOUND.getHttpStatus(), ServerErrorConstant.NOT_FOUND.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ProblemDetail handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
-        String location = stringify(exception.getStackTrace()[0]);
-        log.warn("Location : {} UserAlreadyExistException : [{}]",location, exception.getMessage());
+        log.warn("",exception);
         return build(ServerErrorConstant.BAD_REQUEST.getHttpStatus(), ServerErrorConstant.BAD_REQUEST.getMessage());
     }
-//    @ExceptionHandler(Exception.class)
-//    public ProblemDetail handleException(Exception exception) {
-//        String location = stringify(exception.getStackTrace()[0]);
-//        log.warn("Location : {} Exception : [{}]",location, exception.getMessage());
-//        return build(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
-//    }
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleException(Exception exception) {
+        log.warn("Exception type: {}, message: {}", exception.getClass().getName(), exception.getMessage(), exception);
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
+    }
 
     private String stringify(MethodArgumentNotValidException exception) {
         StringBuilder errorMessageBuilder = new StringBuilder();

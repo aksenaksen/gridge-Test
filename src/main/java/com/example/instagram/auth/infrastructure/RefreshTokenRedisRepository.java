@@ -1,6 +1,6 @@
 package com.example.instagram.auth.infrastructure;
 
-import com.example.instagram.auth.application.IRefreshTokenService;
+import com.example.instagram.auth.application.IRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
@@ -11,7 +11,7 @@ import java.time.Duration;
 
 @Repository
 @RequiredArgsConstructor
-public class RefreshTokenRedisRepository implements IRefreshTokenService {
+public class RefreshTokenRedisRepository implements IRefreshTokenRepository {
 
     private final StringRedisTemplate redisTemplate;
     private static final String REFRESH_KEY_FORMAT = "auth::refresh::%s";

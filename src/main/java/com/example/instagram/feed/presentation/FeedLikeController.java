@@ -25,7 +25,7 @@ public class FeedLikeController {
 
     @Operation(summary = "좋아요 등록", description = "게시물에 좋아요를 등록합니다")
     @ApiResponses({
-            @ApiResponse(responseCode = "404", description = "좋아요 등록 성공"),
+            @ApiResponse(responseCode = "200", description = "좋아요 등록 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "401", description = "인증 실패")
     })
@@ -36,7 +36,7 @@ public class FeedLikeController {
         
         LikeCommand command = new LikeCommand(feedId, user.getUser().getUserId());
         feedLikeService.like(command);
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "좋아요 취소", description = "게시물의 좋아요를 취소합니다")

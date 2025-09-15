@@ -4,10 +4,7 @@ package com.example.instagram.comment.domain;
 import com.example.instagram.comment.exception.AlreadyBlockedOrDeletedException;
 import com.example.instagram.comment.exception.CommentNotMatchedUserException;
 import com.example.instagram.common.BaseEntity;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +26,8 @@ public class Comment extends BaseEntity {
     private Long writerId;
     @Embedded
     private CommentPath commentPath;
+    
+    @Enumerated(EnumType.STRING)
     private CommentStatus status;
 
     public static Comment create(Long commentId, String content, Long articleId, Long writerId, CommentPath commentPath) {

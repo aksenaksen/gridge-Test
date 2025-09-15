@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     
     private final JwtUtil jwtUtil;
-    private final IRefreshTokenService refreshTokenPort;
+    private final IRefreshTokenRepository refreshTokenPort;
     
     public void validateRefreshToken(String refreshToken) {
         jwtUtil.validateToken(refreshToken);

@@ -7,6 +7,8 @@ import com.example.instagram.comment.application.dto.in.CommentUpdateCommand;
 import com.example.instagram.comment.application.dto.out.CommentDto;
 import com.example.instagram.comment.domain.CommentPage;
 import com.example.instagram.common.Page;
+import com.example.instagram.feed.application.feed.FeedFinder;
+import com.example.instagram.feed.application.feed.FeedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +21,11 @@ public class CommentService {
 
     private final CommentCommander commentCommander;
     private final CommentFinder commentFinder;
+    private final FeedService feedService;
 
     @Transactional
     public void create(CommentCreateCommand command) {
+        feedService.findFeedById(command.feedId());
         commentCommander.createComment(command);
     }
 

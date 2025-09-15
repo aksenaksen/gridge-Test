@@ -43,7 +43,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         if (ex != null) {
             resolver.resolveException(request, response, null, ex);
         } else {
-            resolver.resolveException(request, response, null, new AuthenticationException("Unauthorized") {});
+            resolver.resolveException(request, response, null, new AuthenticationException("인증이 필요합니다.") {});
         }
     }
 }

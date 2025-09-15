@@ -1,7 +1,7 @@
 package com.example.instagram.auth.filter;
 
 
-import com.example.instagram.auth.application.IRefreshTokenService;
+import com.example.instagram.auth.application.IRefreshTokenRepository;
 import com.example.instagram.auth.constant.AuthMessageConstant;
 import com.example.instagram.auth.domain.TokenType;
 import com.example.instagram.common.util.JwtUtil;
@@ -23,7 +23,7 @@ import java.io.IOException;
 public class CustomLogoutFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final IRefreshTokenService refreshTokenService;
+    private final IRefreshTokenRepository refreshTokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

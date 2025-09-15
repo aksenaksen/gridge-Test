@@ -1,6 +1,6 @@
 package com.example.instagram.auth.filter;
 
-import com.example.instagram.auth.application.IRefreshTokenService;
+import com.example.instagram.auth.application.IRefreshTokenRepository;
 import com.example.instagram.auth.domain.CustomUserDetails;
 import com.example.instagram.auth.domain.Expiration;
 import com.example.instagram.auth.domain.TokenType;
@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,11 +23,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +36,7 @@ import static com.example.instagram.auth.constant.AuthMessageConstant.*;
 public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final IRefreshTokenService refreshTokenService;
+    private final IRefreshTokenRepository refreshTokenService;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 

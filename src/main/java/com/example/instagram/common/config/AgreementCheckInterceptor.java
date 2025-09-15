@@ -26,8 +26,7 @@ public class AgreementCheckInterceptor implements HandlerInterceptor {
 
         String requestURI = request.getRequestURI();
         
-        // Swagger 관련 경로는 인터셉터에서 제외
-        if (requestURI.startsWith("/swagger-ui") || 
+        if (requestURI.startsWith("/swagger-ui") ||
             requestURI.startsWith("/v3/api-docs") || 
             requestURI.equals("/swagger-ui.html")) {
             return true;
@@ -35,7 +34,6 @@ public class AgreementCheckInterceptor implements HandlerInterceptor {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         
-        // 익명 사용자인 경우 통과
         if (principal instanceof String && "anonymousUser".equals(principal)) {
             return true;
         }

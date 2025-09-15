@@ -120,7 +120,7 @@ public class UserController {
     })
     @PutMapping("/password")
     public ResponseEntity<Void> updateUser(
-            @Parameter(description = "비밀번호 변경 데이터") RequestUpdatePasswordUser req){
+            @Parameter(description = "비밀번호 변경 데이터") @RequestBody @Valid RequestUpdatePasswordUser req){
         userService.changePassword(req.toCommand());
         return ResponseEntity.noContent().build();
     }

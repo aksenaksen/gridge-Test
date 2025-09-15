@@ -1,6 +1,6 @@
 package com.example.instagram.auth.application;
 
-public interface IRefreshTokenService {
+public interface IRefreshTokenRepository {
     void create(String username, String refreshToken, long ttl);
     void reissueToken(String username, String newRefreshToken, long ttl);
     void delete(String username);

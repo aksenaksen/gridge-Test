@@ -122,7 +122,7 @@ public class CommentController {
     @GetMapping("/feeds/{feedId}")
     public ResponseEntity<List<ResponseComment>> findCommentsByFeedId(
             @Parameter(description = "게시물 ID") @PathVariable Long feedId,
-            @Parameter(description = "마지막 댓글 ID (페이지네이션)") @RequestParam String lastCommentId,
+            @Parameter(description = "마지막 댓글 ID (페이지네이션)") @RequestParam(required = false) String lastCommentId,
             @Parameter(description = "페이지 크기") @RequestParam(defaultValue = "2") Long pageSize) {
         
         List<ResponseComment> res = commentService.findAll(feedId, new CommentPage(pageSize, lastCommentId))

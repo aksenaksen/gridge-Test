@@ -1,6 +1,7 @@
 package com.example.instagram.auth.filter;
 
 
+import com.example.instagram.auth.constant.AuthErrorConstant;
 import com.example.instagram.auth.constant.AuthMessageConstant;
 import com.example.instagram.auth.domain.CustomUserDetails;
 import com.example.instagram.auth.domain.TokenType;
@@ -38,6 +39,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith(AuthMessageConstant.BEARER_TOKEN_PREFIX)) {
+            request.setAttribute("Exception", new JwtValidationException(AuthErrorConstant.EMPTY_CLAIMS));
             filterChain.doFilter(request, response);
             return;
         }

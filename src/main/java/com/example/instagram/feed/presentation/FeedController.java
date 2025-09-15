@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,7 +40,7 @@ public class FeedController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "401", description = "인증 실패")
     })
-    @PostMapping()
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> createFeed(
             @Parameter(description = "게시물 데이터") @RequestPart("data") @Valid RequestCreateFeed request,
             @Parameter(description = "이미지 파일들") @RequestPart("image") List<MultipartFile> imageFiles,
@@ -47,7 +48,7 @@ public class FeedController {
     ) {
 
         List<String> imageUrls = fileUploadService.uploadMultipleFiles(imageFiles, "feeds");
-        
+
         feedService.createFeed(request.toCommand(userDetails.getUser().getUserId(), imageUrls));
 
         return ResponseEntity.ok().build();
@@ -83,7 +84,7 @@ public class FeedController {
             @ApiResponse(responseCode = "403", description = "권한 없음"),
             @ApiResponse(responseCode = "404", description = "게시물을 찾을 수 없음")
     })
-    @PatchMapping("/{feedId}")
+    @PatchMapping(value = "/{feedId}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteFeed(
             @Parameter(description = "게시물 ID") @PathVariable Long feedId,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails userDetails) {
